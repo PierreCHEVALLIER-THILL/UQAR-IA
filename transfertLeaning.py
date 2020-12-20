@@ -25,7 +25,6 @@ data = IDG().flow_from_directory(b_path,target_size=(pic_size,pic_size),
                                        color_mode="grayscale",batch_size=batch_size,
                                        class_mode="categorical",shuffle=False)
 
-
 n_classes = 7
 
 plt.figure(0,figsize=(20,20))
@@ -40,11 +39,6 @@ for expression in os.listdir(b_path):
 plt.tight_layout()
 plt.show()
 
-
-
-
-    
-
 base_model.trainable = False
 
 print(base_model.input);
@@ -54,7 +48,6 @@ x = base_model(inputs, training=False)
 outputs = keras.layers.Dense(7)(x)
 model = keras.Model(inputs, outputs)
 
-
 model.compile(optimizer=keras.optimizers.Adam(),
               loss=keras.losses.BinaryCrossentropy(from_logits=True),
               metrics=[keras.metrics.BinaryAccuracy()])
@@ -63,10 +56,6 @@ checkpoint = ModelCheckpoint("model_weights.h5", monitor='val_accuracy', verbose
 callbacks_list = [checkpoint]
 
 history = model.fit(data, epochs=epochs, callbacks=callbacks_list)
-
-#history = model.fit(generator=data, steps_per_epoch=data.n//data.batch_size,, epochs=epochs, validation_data = data,callbacks=callbacks_list)
-
-
 
 Y_pred = model.predict_generator(data,  data.n // batch_size+1)
 y_pred = np.argmax(Y_pred, axis=1)
